@@ -1,5 +1,8 @@
 package com.totex.simplegymapp.business.dto;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,9 +15,14 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserCreateDto {
-    private Long id;
+    @NotBlank
     private String username;
-    private String password;
+
+    @NotBlank
+    @Email
     private String email;
-    private List<WorkoutDto> workouts;
+
+    @NotBlank
+    @Size(min = 8)
+    private String password;
 }
