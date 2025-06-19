@@ -14,7 +14,7 @@ public class UserConverter {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public UserModel convertToUserModel(UserCreateDto userCreateDto) {
+    public UserModel toUserModel(UserCreateDto userCreateDto) {
         UserModel user = new UserModel();
         user.setUsername(userCreateDto.getUsername());
         user.setEmail(userCreateDto.getEmail());
@@ -22,7 +22,7 @@ public class UserConverter {
         return user;
     }
 
-    public UserCreateDto convertToUserDto(UserModel userModel) {
+    public UserCreateDto toUserDto(UserModel userModel) {
         UserCreateDto userDto = new UserCreateDto();
         userDto.setUsername(userModel.getUsername());
         userDto.setEmail(userDto.getEmail());

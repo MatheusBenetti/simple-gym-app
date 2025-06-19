@@ -17,5 +17,6 @@ public class WorkoutDto {
     private String workoutName;
     private LocalDate startDate;
     private List<ExerciseDto> exercises;
+    private String username;
     private Long userId;
 }
