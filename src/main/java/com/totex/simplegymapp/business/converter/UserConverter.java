@@ -1,6 +1,7 @@
 package com.totex.simplegymapp.business.converter;
 
 import com.totex.simplegymapp.business.dto.UserCreateDto;
+import com.totex.simplegymapp.business.dto.UserResponseDto;
 import com.totex.simplegymapp.business.dto.UserUpdateDto;
 import com.totex.simplegymapp.infrastructure.model.UserModel;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -22,16 +23,21 @@ public class UserConverter {
         return user;
     }
 
-    public UserCreateDto toUserDto(UserModel userModel) {
-        UserCreateDto userDto = new UserCreateDto();
-        userDto.setUsername(userModel.getUsername());
-        userDto.setEmail(userDto.getEmail());
-        return userDto;
+    public UserResponseDto toUserResponseDto(UserModel user) {
+        UserResponseDto dto = new UserResponseDto();
+        dto.setUserId(user.getUserId());
+        dto.setUsername(user.getUsername());
+        dto.setEmail(user.getEmail());
+        return dto;
     }
 
     public void updateUserModel(UserModel user, UserUpdateDto dto) {
         if (dto.getUsername() != null && !dto.getUsername().isBlank()) {
             user.setUsername(dto.getUsername());
+        }
+
+        if (dto.getEmail() != null && !dto.getEmail().isBlank()) {
+            user.setEmail(dto.getEmail());
         }
 
         if (dto.getNewPassword() != null && !dto.getNewPassword().isBlank()) {

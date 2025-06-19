@@ -1,5 +1,6 @@
 package com.totex.simplegymapp.infrastructure.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -29,6 +30,7 @@ public class UserModel implements UserDetails {
     private String email;
 
     @Column(name = "password")
+    @JsonIgnore
     private String password;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)

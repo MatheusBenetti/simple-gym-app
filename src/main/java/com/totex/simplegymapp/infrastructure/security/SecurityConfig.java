@@ -38,7 +38,14 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/auth").permitAll()
                         .requestMatchers(HttpMethod.POST, "/user").permitAll()
                         .requestMatchers(HttpMethod.POST, "/user/login").permitAll()
+
                         .requestMatchers("/user/**").authenticated()
+                        .requestMatchers("/workouts/**").authenticated()
+                        .requestMatchers("/exercises/**").authenticated()
+
+                        .requestMatchers(HttpMethod.GET, "/workouts/all").authenticated() // ou hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/exercises/all").authenticated() // ou hasRole("ADMIN")
+
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session
