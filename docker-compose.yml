@@ -1,0 +1,77 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: simplegym-postgres
+    environment:
+      POSTGRES_DB: simplegymdb
+      POSTGRES_USER: gymuser
+      POSTGRES_PASSWORD: gympassword
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init-scripts:/docker-entrypoint-initdb.d
+    networks:
+      - simplegym-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U gymuser -d simplegymdb"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # Redis Cache
+  redis:
+    image: redis:7-alpine
+    container_name: simplegym-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - simplegym-network
+    restart: unless-stopped
+    command: redis-server --appendonly yes --requirepass redispassword
+    healthcheck:
+      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # Application (opcional)
+  app:
+    build: .
+    container_name: simplegym-app
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/simplegymdb
+      SPRING_DATASOURCE_USERNAME: gymuser
+      SPRING_DATASOURCE_PASSWORD: gympassword
+      SPRING_DATA_REDIS_HOST: redis
+      SPRING_DATA_REDIS_PORT: 6379
+      SPRING_DATA_REDIS_PASSWORD: redispassword
+      JWT_SECRET: sua-chave-secreta-super-segura-para-producao-jwt-token
+    ports:
+      - "8080:8080"
+    networks:
+      - simplegym-network
+    restart: unless-stopped
+    profiles:
+      - full
+
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
+
+networks:
+  simplegym-network:
+    driver: bridge
